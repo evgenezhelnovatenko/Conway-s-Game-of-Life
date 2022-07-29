@@ -3,6 +3,7 @@
 #include <vector>
 #include <memory>
 
+
 using std::vector, std::unique_ptr;
 
 class Space : public sf::Drawable, public sf::Transformable

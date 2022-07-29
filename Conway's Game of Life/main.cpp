@@ -2,7 +2,12 @@
 #include "Space.h"
 #include <iostream>
 
-#define MOVE_SPEED 2
+#define MOVE_SPEED 10
+
+void updateDt(sf::Clock& clock, float& dt)
+{
+	dt = clock.restart().asSeconds();
+}
 
 sf::Vector2i computeSpaceSizeByLiveCellsSet(const std::vector<sf::Vector2i>& liveCellsSet)
 {
@@ -42,10 +47,10 @@ std::vector<sf::Vector2i> convertLiveCellsCoordsToRelativeSpaceCoords(const Spac
 	return overlaySpaceLiveCellsCoords;
 }
 
-bool updateGame(Space &space, sf::Clock &clock) {
+bool updateGame(Space &space, sf::Clock &clock, float& dt) {
 	
 	sf::Time elapsed = clock.getElapsedTime();
-	if (elapsed.asMilliseconds() >= MOVE_SPEED * 100)
+	if (elapsed.asSeconds() >= MOVE_SPEED / 200)
 	{
 		clock.restart();
 		return space.update();
@@ -73,6 +78,7 @@ int main()
 
 	Space* overlaySpace = nullptr;
 
+	float dt = 0.f;
 	bool isGameInProgress = false;
 	bool isBuildMode = false;
 
@@ -250,7 +256,7 @@ int main()
 		
 		if (isGameInProgress)
 		{
-			isGameInProgress = updateGame(space, clock);
+			isGameInProgress = updateGame(space, clock, dt);
 			if (!isGameInProgress)
 				std::cout << "The game has stopped." << std::endl;
 		}

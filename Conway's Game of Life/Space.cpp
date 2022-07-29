@@ -255,9 +255,6 @@ void Space::draw(sf::RenderTarget& target, sf::RenderStates states) const
 
 	for (auto liveCell : _liveCells)
 	{
-		if (liveCell.x < 0 || liveCell.x > _width ||
-			liveCell.y < 0 || liveCell.y > _height)
-			continue;
 
 		sf::RectangleShape cell(sf::Vector2f(_cellSize, _cellSize));
 		cell.setFillColor(_liveCellColor);
@@ -283,23 +280,26 @@ void Space::convertToGlobalCoords(sf::Vector2i &coords) const
 int Space::findTheNumberOfLiveNeighbors(const sf::Vector2i& cellCoords) const
 {
 	int numberOfLiveNeighbors = 0;
-	sf::Vector2i neighborCellCoords(cellCoords.x - 1, cellCoords.y - 1);
+	sf::Vector2i neighborCellCoords(cellCoords.x, cellCoords.y);
 
-	for (; neighborCellCoords.y <= cellCoords.y + 1; neighborCellCoords.y++)
+	for (int i = -1; i <= 1; i++)
 	{
+		neighborCellCoords.y = cellCoords.y + i;
 		if (neighborCellCoords.y < 0)
-			continue;
+			neighborCellCoords.y = neighborCellCoords.y + _height;
 		if (neighborCellCoords.y >= _height)
-			break;
+			neighborCellCoords.y = neighborCellCoords.y - _height;
 
-		for (; neighborCellCoords.x <= cellCoords.x + 1; neighborCellCoords.x++)
+		for (int j = -1; j <= 1; j++)
 		{
+			neighborCellCoords.x = cellCoords.x + j;
+
 			if (neighborCellCoords.x < 0)
-				continue;
+				neighborCellCoords.x = neighborCellCoords.x + _width;
 			if (neighborCellCoords == cellCoords)
 				continue;
 			if (neighborCellCoords.x >= _width)
-				break;
+				neighborCellCoords.x = neighborCellCoords.x - _width;
 
 			for (auto& liveCell : _liveCells)
 			{
