@@ -3,6 +3,7 @@
 #include <vector>
 #include <memory>
 
+using std::vector, std::unique_ptr;
 
 class Space : public sf::Drawable, public sf::Transformable
 {
@@ -20,17 +21,18 @@ public:
 		, const unsigned int& cellSize
 		, const sf::Color& liveCellColor);
 
-	void initialisation(const std::vector<sf::Vector2i>& preset);
+	void initialisation(const vector<sf::Vector2i>& preset);
 	sf::Vector2i getSize() const;
 	void setWidth(const int &width);
 	int getCellSize() const;
 	void setPosition(const sf::Vector2i& position);
 	sf::Vector2i getPosition() const;
 	sf::VertexArray& getGridLineVertices() const;
-	void setLiveCells(const std::vector<sf::Vector2i>& set);
-	const std::vector<sf::Vector2i>& getLiveCells() const;
+	void setLiveCells(const vector<sf::Vector2i>& set);
+	const vector<sf::Vector2i>& getLiveCells() const;
 	bool isCellAlive(const sf::Vector2i& cell) const;
 	bool addLiveCell(sf::Vector2i cellCoords);
+	void addLiveCells(const vector<sf::Vector2i>& cells);
 	bool removeLiveCell(sf::Vector2i cellCoords);
 	void convertRelativeCoordsToAbsoluteCoords(sf::Vector2i& coords) const;
 	void convertAbsoluteCoordsToRelativeCoords(sf::Vector2i& coords) const;
@@ -40,10 +42,10 @@ public:
 	
 	static void convertToLocalCoords(sf::Vector2i& coords, const int& cellSize);
 	static void convertToGlobalCoords(sf::Vector2i& coords, const int& cellSize);
-	static bool addLiveCellToSet(std::vector<sf::Vector2i>& liveCellsSet, const sf::Vector2i& cellCoords);
-	static bool removeLiveCellFromSet(std::vector<sf::Vector2i>& liveCellsSet, const sf::Vector2i& cellCoords);
-	static bool isCellInTheSet(const std::vector<sf::Vector2i>& liveCellsSet, const sf::Vector2i& cell);
-	static void showLiveCells(const std::vector<sf::Vector2i>& liveCellsSet);
+	static bool addLiveCellToSet(vector<sf::Vector2i>& liveCellsSet, const sf::Vector2i& cellCoords);
+	static bool removeLiveCellFromSet(vector<sf::Vector2i>& liveCellsSet, const sf::Vector2i& cellCoords);
+	static bool isCellInTheSet(const vector<sf::Vector2i>& liveCellsSet, const sf::Vector2i& cell);
+	static void showLiveCells(const vector<sf::Vector2i>& liveCellsSet);
 
 private:
 
@@ -53,7 +55,7 @@ private:
 	int findTheNumberOfLiveNeighbors(const sf::Vector2i& cellCoords) const;
 	
 	void convertVerticesCoordsToAbsoluteCoords();
-	void convertLiveCellsCoordsToAbsoluteCoords();
+
 
 
 
@@ -68,8 +70,8 @@ private:
 	sf::Color _gridColor;
 	sf::Color _liveCellColor;
 	
-	std::unique_ptr<sf::VertexArray> _gridLineVertices;
-	std::vector<sf::Vector2i> _liveCells;
+	unique_ptr<sf::VertexArray> _gridLineVertices;
+	vector<sf::Vector2i> _liveCells;
 	
 };
 

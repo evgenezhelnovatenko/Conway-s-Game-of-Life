@@ -97,6 +97,12 @@ bool Space::addLiveCell(sf::Vector2i cellCoords)
 	return addLiveCellToSet(_liveCells, cellCoords);
 }
 
+void Space::addLiveCells(const vector<sf::Vector2i>& cells)
+{
+	for (const auto& cell : cells)
+		addLiveCell(cell);
+}
+
 bool Space::removeLiveCell(sf::Vector2i cellCoords)
 {
 	convertToLocalCoords(cellCoords);
@@ -249,16 +255,14 @@ void Space::draw(sf::RenderTarget& target, sf::RenderStates states) const
 
 	for (auto liveCell : _liveCells)
 	{
+		if (liveCell.x < 0 || liveCell.x > _width ||
+			liveCell.y < 0 || liveCell.y > _height)
+			continue;
+
 		sf::RectangleShape cell(sf::Vector2f(_cellSize, _cellSize));
 		cell.setFillColor(_liveCellColor);
 
 		convertToGlobalCoords(liveCell);
-
-		if (liveCell.x < 0 || liveCell.x > getSize().x ||
-			liveCell.y < 0 || liveCell.y > getSize().y)
-			continue;
-
-
 		convertRelativeCoordsToAbsoluteCoords(liveCell);
 		cell.move(sf::Vector2f(liveCell));
 
@@ -317,11 +321,6 @@ void Space::convertVerticesCoordsToAbsoluteCoords()
 		(*_gridLineVertices)[i].position += sf::Vector2f(_position);
 }
 
-void Space::convertLiveCellsCoordsToAbsoluteCoords()
-{
-	for (int i = 0; i < _liveCells.size(); i++)
-		_liveCells.at(i) += _position;
-}
 
 
 
